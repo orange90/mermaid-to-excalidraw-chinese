@@ -83,8 +83,8 @@ Currently `mermaid-to-excalidraw` only supports the :point_down: config params
   fontSize?: number;
   /**
    * Font family for text elements
-   * @default 1 (Excalifont - handwritten with Chinese support)
-   * 1: Excalifont (handwritten, supports Chinese characters)
+   * @default 1 (平方萌萌哒 - 中文手写字体)
+   * 1: 平方萌萌哒 (PingFangMengMeng - 中文手写字体)
    * 2: Nunito (normal)
    * 3: Comic Shanns (code)
    */
@@ -106,7 +106,7 @@ try {
       },
     },
     {
-      fontFamily: FONT_FAMILY.HANDWRITTEN, // Use Chinese handwriting font
+      fontFamily: FONT_FAMILY.PINGFANG_MENGMENG, // 使用平方萌萌哒中文手写字体
     }
   );
   // Render elements and files on Excalidraw
@@ -114,6 +114,24 @@ try {
   // Parse error, displaying error message to users
 }
 ```
+
+## 字体配置
+
+本项目支持**平方萌萌哒**中文手写字体，为您的图表提供更好的中文显示效果。
+
+### 字体安装步骤
+
+1. 下载平方萌萌哒字体文件（`PingFangMengMeng-2.ttf`）
+2. 将字体文件放置到 `playground/fonts/` 目录中
+3. 确保文件名为 `PingFangMengMeng-2.ttf`
+4. 重新构建项目
+
+### 字体特性
+
+- ✅ 支持中文手写风格
+- ✅ 与 Excalidraw 手绘风格完美融合  
+- ✅ 自动 fallback 到系统字体
+- ✅ 优化的字体加载性能
 
 ## Playground
 

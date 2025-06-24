@@ -26,3 +26,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# 字体文件说明
+# playground/fonts/ 目录中的字体文件需要手动添加
+# 请将 PingFangMengMeng-2.ttf 放置在 playground/fonts/ 目录中

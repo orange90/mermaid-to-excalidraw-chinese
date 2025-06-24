@@ -1,8 +1,25 @@
+// 平方萌萌哒字体定义
+@font-face {
+  font-family: 'PingFangMengMeng';
+  src: url('./fonts/PingFangMengMeng-2.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+// 为Excalidraw应用平方萌萌哒字体
+.excalidraw {
+  .Virgil {
+    font-family: 'PingFangMengMeng', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
+  }
+}
+
+// 全局字体fallback，包含平方萌萌哒
 body {
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'PingFangMengMeng', sans-serif;
   #flowchart-container,
   #unsupported {
     max-width: 48%;

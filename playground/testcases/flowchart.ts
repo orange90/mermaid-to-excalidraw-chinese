@@ -546,13 +546,21 @@ C -->|Two| E[Result two]
     type: "flowchart",
   },
   {
-    name: "Chinese text support",
+    name: "平方萌萌哒字体 - 中文支持",
     definition: `flowchart TD
-A[开始] --> B{是否为中文?}
-B -->|是| C[显示中文字体]
-B -->|否| D[显示英文字体]
-C --> E[结束]
-D --> E
+A[开始 🎨] --> B{使用平方萌萌哒字体?}
+B -->|是的| C[显示萌萌哒中文字体 ✨]
+B -->|不是| D[使用系统默认字体]
+C --> E[图表更可爱了！🥰]
+D --> F[也很不错～]
+E --> G[结束]
+F --> G
+G --> H[谢谢使用！]
+
+style A fill:#ff9999,stroke:#333,stroke-width:2px
+style C fill:#99ff99,stroke:#333,stroke-width:2px
+style E fill:#ffff99,stroke:#333,stroke-width:2px
+style H fill:#ff99ff,stroke:#333,stroke-width:2px
 `,
     type: "flowchart",
   },

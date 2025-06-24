@@ -32,7 +32,7 @@ const ExcalidrawWrapper = ({
 
     const { elements, files } = graphToExcalidraw(mermaidOutput, {
       fontSize: DEFAULT_FONT_SIZE,
-      fontFamily: FONT_FAMILY.HANDWRITTEN, // Use handwritten font (supports Chinese)
+      fontFamily: FONT_FAMILY.PINGFANG_MENGMENG, // 使用平方萌萌哒字体
     });
 
     excalidrawAPI.updateScene({
@@ -53,7 +53,7 @@ const ExcalidrawWrapper = ({
         initialData={{
           appState: {
             viewBackgroundColor: "#fafafa",
-            currentItemFontFamily: FONT_FAMILY.HANDWRITTEN, // Chinese handwriting support
+            currentItemFontFamily: FONT_FAMILY.PINGFANG_MENGMENG, // 平方萌萌哒中文字体
           },
         }}
         excalidrawAPI={(api) => setExcalidrawAPI(api)}
