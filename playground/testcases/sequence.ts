@@ -3,217 +3,217 @@ import { TestCase } from "../SingleTestCase";
 export const SEQUENCE_DIAGRAM_TESTCASES: TestCase[] = [
   {
     type: "sequence",
-    name: "Solid and dotted line without arrow",
+    name: "实线和虚线（无箭头）",
     definition: `sequenceDiagram
-  Alice->John: Hello John, how are you?
-  John-->Alice: Great!`,
+  小爱->小明: 你好小明，最近怎么样？
+  小明-->小爱: 很好啊！`,
   },
   {
     type: "sequence",
-    name: "Solid and dotted line with arrow head",
+    name: "实线和虚线（带箭头）",
     definition: `sequenceDiagram
-  Alice->>John: Hello John, how are you?
-  John-->>Alice: Great!
-  Alice->>John: See you later!`,
+  小爱->>小明: 你好小明，最近怎么样？
+  小明-->>小爱: 很好啊！
+  小爱->>小明: 回头见！`,
   },
   {
     type: "sequence",
-    name: "Solid and Dotted line with cross at end",
+    name: "实线和虚线（末端带叉）",
     definition: `sequenceDiagram
-  Alice-xJohn: Hello John, how are you?
-  John--xAlice: Great!`,
+  小爱-x小明: 你好小明，最近怎么样？
+  小明--x小爱: 很好啊！`,
   },
   {
     type: "sequence",
-    name: "Solid and dotted line with open arrow at end",
+    name: "实线和虚线（开放箭头）",
     definition: `sequenceDiagram
-  Alice-)John: Hello John, how are you?
-  John--)Alice: Great!
-  Alice-)John: See you later!`,
+  小爱-)小明: 你好小明，最近怎么样？
+  小明--)小爱: 很好啊！
+  小爱-)小明: 回头见！`,
   },
   {
     type: "sequence",
-    name: "Actor symbols",
+    name: "角色符号",
     definition: `sequenceDiagram
-  actor Alice
-  actor Bob
-  Alice->>Bob: Hi Bob
-  Bob->>Alice: Hi Alice`,
+  actor 小爱
+  actor 小明
+  小爱->>小明: 嗨，小明
+  小明->>小爱: 嗨，小爱`,
   },
   {
     type: "sequence",
-    name: "Aliases",
+    name: "别名",
     definition: `sequenceDiagram
-  participant A as Alice
-  participant J as John
-  A->>J: Hello John, how are you?
-  J->>A: Great!`,
+  participant A as 小爱
+  participant J as 小明
+  A->>J: 你好小明，最近怎么样？
+  J->>A: 很好啊！`,
   },
   {
     type: "sequence",
-    name: "Notes",
+    name: "备注",
     definition: `sequenceDiagram
-  participant Alice
-  Note left of Alice: This is a note
-  Note right of Alice: Hey I am coming soon!`,
+  participant 小爱
+  Note left of 小爱: 这是一个备注
+  Note right of 小爱: 嘿，我马上就来！`,
   },
   {
     type: "sequence",
-    name: "Grouping",
+    name: "分组",
     definition: `sequenceDiagram
-  box rgb(191, 223, 255) Alice & John
-    participant Alice
-    participant John
+  box rgb(191, 223, 255) 小爱 & 小明
+    participant 小爱
+    participant 小明
   end
-  box Another Group
-    actor Bob
-    actor June
+  box 另一个组
+    actor 小波
+    actor 小红
   end
-  Alice->>John: Hello John, how are you?
-  John->>Alice: Great!
-  Alice->>Bob: Hello Bob, how is June?
-  Bob->>June: Hello June, how are you?`,
+  小爱->>小明: 你好小明，最近怎么样？
+  小明->>小爱: 很好啊！
+  小爱->>小波: 你好小波，小红好吗？
+  小波->>小红: 你好小红，最近怎么样？`,
   },
   {
     type: "sequence",
-    name: "Activations",
+    name: "激活状态",
     definition: `sequenceDiagram
-  Alice->>+John: Hello John, how are you?
-  Alice->>+John: John, can you hear me?
-  John-->>-Alice: Hi Alice, I can hear you!
-  John-->>-Alice: I feel great!`,
+  小爱->>+小明: 你好小明，最近怎么样？
+  小爱->>+小明: 小明，听得到我说话吗？
+  小明-->>-小爱: 嗨小爱，我听得到！
+  小明-->>-小爱: 我感觉很棒！`,
   },
   {
     type: "sequence",
-    name: "Loops",
+    name: "循环",
     definition: `sequenceDiagram
-  Alice->John: Hi John, how are you?
-  loop Every minute
-    John-->Alice: Great!
+  小爱->小明: 嗨小明，最近怎么样？
+  loop 每分钟
+    小明-->小爱: 很好啊！
   end`,
   },
   {
     type: "sequence",
-    name: "Alternate Paths",
+    name: "条件分支",
     definition: `sequenceDiagram
-  Alice->>Bob: Hello Bob, how are you?
-  alt is sick
-      Bob->>Alice: Not so good :(
-  else is well
-      Bob->>Alice: Feeling fresh like a daisy
+  小爱->>小波: 你好小波，最近怎么样？
+  alt 生病了
+      小波->>小爱: 不太好 :(
+  else 很健康
+      小波->>小爱: 感觉像雏菊一样清新
   end
-  opt Extra response
-      Bob->>Alice: Thanks for asking
+  opt 额外回应
+      小波->>小爱: 谢谢关心
   end`,
   },
   {
     type: "sequence",
-    name: "Critical Regions",
+    name: "关键区域",
     definition: `sequenceDiagram
-  critical Establish a connection to the DB
-      Service-->DB: connect
-  option Network timeout
-      Service-->Service: Log error
-  option Credentials rejected
-      Service-->Service: Log different error
+  critical 建立数据库连接
+      服务-->数据库: 连接
+  option 网络超时
+      服务-->服务: 记录错误
+  option 凭据被拒
+      服务-->服务: 记录不同错误
   end`,
   },
   {
     type: "sequence",
-    name: "Parallel Actions",
+    name: "并行操作",
     definition: `sequenceDiagram
-  par Alice to Bob
-    Alice->>Bob: Hello Folks!
-  and Alice to John
-    Alice->>John: Hello Folks!
+  par 小爱对小波
+    小爱->>小波: 大家好！
+  and 小爱对小明
+    小爱->>小明: 大家好！
   end
-  Bob-->>Alice: Hi Alice!
-  John-->>Alice: Hi Alice!`,
+  小波-->>小爱: 嗨小爱！
+  小明-->>小爱: 嗨小爱！`,
   },
   {
     type: "sequence",
-    name: "Break",
+    name: "中断",
     definition: `sequenceDiagram
-  Consumer-->API: Book something
-  API-->BookingService: Start booking process
-  break when the booking process fails
-      API-->Consumer: show failure
+  用户-->接口: 预订某个东西
+  接口-->预订服务: 开始预订流程
+  break 当预订流程失败时
+      接口-->用户: 显示失败信息
   end
-  API-->BillingService: Start billing process`,
+  接口-->计费服务: 开始计费流程`,
   },
   {
     type: "sequence",
-    name: "Comments",
+    name: "注释",
     definition: `sequenceDiagram
-  Alice->>John: Hi John, whats up?
-  %% this is a comment
-  John-->>Alice: Great!`,
+  小爱->>小明: 嗨小明，最近怎么样？
+  %% 这是一个注释
+  小明-->>小爱: 很好啊！`,
   },
   {
     type: "sequence",
-    name: "Background Hightlights",
+    name: "背景高亮",
     definition: `sequenceDiagram
-  participant Alice
-  participant John
+  participant 小爱
+  participant 小明
 
   rect rgb(191, 223, 255)
-  note right of Alice: Alice calls John.
-  Alice->>+John: Hello John, how are you?
+  note right of 小爱: 小爱给小明打电话。
+  小爱->>+小明: 你好小明，最近怎么样？
   rect rgb(200, 150, 255)
-  Alice->>+John: John, can you hear me?
-  John-->>-Alice: Hi Alice, I can hear you!
+  小爱->>+小明: 小明，听得到我说话吗？
+  小明-->>-小爱: 嗨小爱，我听得到！
   end
-  John-->>-Alice: I feel great!
+  小明-->>-小爱: 我感觉很棒！
   end
-  Alice ->>+ John: Did you want to go to the game tonight?
-  John -->>- Alice: Yeah! See you there.`,
+  小爱 ->>+ 小明: 今晚想去看比赛吗？
+  小明 -->>- 小爱: 好啊！到时见。`,
   },
   {
     type: "sequence",
-    name: "Grouping with Background Highlights",
+    name: "分组和背景高亮",
     definition: `sequenceDiagram
   rect rgb(191, 223, 255)
-  box rgb(252, 194, 215) Alice and John
-    participant Alice
-    actor John
+  box rgb(252, 194, 215) 小爱和小明
+    participant 小爱
+    actor 小明
   end
-  note right of Alice: Alice calls John.
-  Alice->>+John: Hello John, how are you?
-  John-->>-Alice: I feel great!
+  note right of 小爱: 小爱给小明打电话。
+  小爱->>+小明: 你好小明，最近怎么样？
+  小明-->>-小爱: 我感觉很棒！
   end
    `,
   },
   {
     type: "sequence",
-    name: "Sequence Numbers",
+    name: "序号",
     definition: `sequenceDiagram
   autonumber
-  Alice->>John: Hello John, how are you?
-  John-->>Alice: Great!
-  John->>Bob: How about you?
-  Bob-->>John: Jolly good!`,
+  小爱->>小明: 你好小明，最近怎么样？
+  小明-->>小爱: 很好啊！
+  小明->>小波: 你呢？
+  小波-->>小明: 很棒！`,
   },
   {
     type: "sequence",
-    name: "Entity codes",
+    name: "实体编码",
     definition: `sequenceDiagram
-    Alice->>Bob: I #9829; you!
-    Bob->>Alice: I #9829; you #infin; times more!`,
+    小爱->>小波: 我 #9829; 你！
+    小波->>小爱: 我 #9829; 你 #infin; 倍！`,
   },
   {
     type: "sequence",
-    name: "Actor creation and destruction",
+    name: "角色创建和销毁",
     definition: `sequenceDiagram
-    Alice->>Bob: Hello Bob, how are you ?
-    Bob->>Alice: Fine, thank you. And you?
-    create participant Carl
-    Alice->>Carl: Hi Carl!
-    create actor D as Donald
-    Carl->>D: Hi!
-    destroy Carl
-    Alice-xCarl: We are too many
-    destroy Bob
-    Bob->>Alice: I agree`,
+    小爱->>小波: 你好小波，最近怎么样？
+    小波->>小爱: 很好，谢谢。你呢？
+    create participant 小强
+    小爱->>小强: 嗨小强！
+    create actor D as 小东
+    小强->>D: 嗨！
+    destroy 小强
+    小爱-x小强: 我们人太多了
+    destroy 小波
+    小波->>小爱: 我同意`,
   },
   {
     type: "sequence",

@@ -2,565 +2,371 @@ import { TestCase } from "../SingleTestCase";
 
 export const FLOWCHART_DIAGRAM_TESTCASES: TestCase[] = [
   {
-    name: "Direction Top to Down",
+    name: "从上到下方向",
     definition: `flowchart TD
-Start --> Stop
+开始 --> 结束
 `,
     type: "flowchart",
   },
   {
-    name: "Direction Left to Right",
+    name: "从左到右方向",
     definition: `flowchart LR
-Start --> Stop
+开始 --> 结束
 `,
     type: "flowchart",
   },
   {
-    name: "A node with round edges",
+    name: "圆角矩形节点",
     definition: `flowchart LR
-id1(This is the text in the box)
+id1(这是方框中的文本)
 `,
     type: "flowchart",
   },
   {
-    name: "A stadium-shaped node ",
+    name: "体育场形状节点",
     definition: `flowchart LR
-id1([This is the text in the box])
+id1([这是方框中的文本])
 `,
     type: "flowchart",
   },
   {
-    name: "A node in a subroutine shape",
+    name: "子程序形状节点",
     definition: `flowchart LR
-id1[[This is the text in the box]]
+id1[[这是方框中的文本]]
 `,
     type: "flowchart",
   },
   {
-    name: "A node in a cylindrical shape",
+    name: "圆柱形节点",
     definition: `flowchart LR
-id1[(Database)]
+id1[(数据库)]
 `,
     type: "flowchart",
   },
   {
-    name: "A node in the form of a circle",
+    name: "圆形节点",
     definition: `flowchart LR
-id1((This is the text in the circle))
+id1((这是圆圈中的文本))
 `,
     type: "flowchart",
   },
   {
-    name: "A node in an asymmetric shape",
+    name: "不对称形状节点",
     definition: `flowchart LR
-id1>This is the text in the box]
+id1>这是方框中的文本]
 `,
     type: "flowchart",
   },
   {
-    name: "A node (rhombus)",
+    name: "菱形节点",
     definition: `flowchart LR
-id1{This is the text in the box}
+id1{这是方框中的文本}
 `,
     type: "flowchart",
   },
   {
-    name: "A hexagon node",
+    name: "六边形节点",
     definition: `flowchart LR
-id1{{This is the text in the box}}
+id1{{这是方框中的文本}}
 `,
     type: "flowchart",
   },
   {
-    name: "Parallelogram",
+    name: "平行四边形",
     definition: `flowchart TD
-id1[/This is the text in the box/]
+id1[/这是方框中的文本/]
 `,
     type: "flowchart",
   },
   {
-    name: "Parallelogram with alt text",
+    name: "平行四边形(备用文本)",
     definition: `flowchart TD
-id1[\\This is the text in the box\\]
+id1[\\这是方框中的文本\\]
 `,
     type: "flowchart",
   },
   {
-    name: "Trapezoid",
+    name: "梯形",
     definition: `flowchart TD
-A[/Christmas\\]
+A[/圣诞节\\]
 `,
     type: "flowchart",
   },
   {
-    name: "Trapezoid alt",
+    name: "梯形(备用)",
     definition: `flowchart TD
-B[\\Go shopping/]
+B[\\去购物/]
 `,
     type: "flowchart",
   },
   {
-    name: "Double circle",
+    name: "双圆圈",
     definition: `flowchart TD
-id1(((This is the text in the circle)))
+id1(((这是圆圈中的文本)))
 `,
     type: "flowchart",
   },
   {
-    name: "A link with arrow head",
+    name: "带箭头的链接",
     definition: `flowchart LR
 A-->B
 `,
     type: "flowchart",
   },
   {
-    name: "A link with arrow head and text",
+    name: "带箭头和文本的链接",
     definition: `flowchart LR
-A-->|text|B
+A-->|文本|B
 `,
     type: "flowchart",
   },
   {
-    name: "A link with arrow head and text using another syntax",
+    name: "带箭头和文本的链接(另一种语法)",
     definition: `flowchart LR
-A-- text -->B
+A-- 文本 -->B
 `,
     type: "flowchart",
   },
   {
-    name: "Dotted link",
+    name: "点线链接",
     definition: `flowchart LR
 A-.->B;
 `,
     type: "flowchart",
   },
   {
-    name: "Dotted link with text",
+    name: "带文本的点线链接",
     definition: `flowchart LR
-A-. text .-> B
+A-. 文本 .-> B
 `,
     type: "flowchart",
   },
   {
-    name: "An open link ",
+    name: "开放链接",
     definition: `flowchart LR
 A --- B
 `,
     type: "flowchart",
   },
   {
-    name: "An open link with text",
+    name: "带文本的开放链接",
     definition: `flowchart LR
-A-- This is the text! ---B
+A-- 这是文本! ---B
 `,
     type: "flowchart",
   },
   {
-    name: "An open link with text using another syntax",
+    name: "带文本的开放链接(另一种语法)",
     definition: `flowchart LR
-A---|This is the text|B
+A---|这是文本|B
 `,
     type: "flowchart",
   },
   {
-    name: "Thick link",
+    name: "粗链接",
     definition: `flowchart LR
 A ==> B
 `,
     type: "flowchart",
   },
   {
-    name: "Thick link with text",
+    name: "带文本的粗链接",
     definition: `flowchart LR
-A == text ==> B
+A == 文本 ==> B
 `,
     type: "flowchart",
   },
   {
-    name: "Chaining of links",
+    name: "链接的链式连接",
     definition: `flowchart LR
-A -- text --> B -- text2 --> C
+A -- 文本 --> B -- 文本2 --> C
 `,
     type: "flowchart",
   },
   {
-    name: "Multiple nodes links in the same line",
+    name: "同一行中的多节点链接",
     definition: `flowchart LR
 a --> b & c--> d
 `,
     type: "flowchart",
   },
   {
-    name: "Multiple nodes links to describe a dependencies",
+    name: "描述依赖关系的多节点链接",
     definition: `flowchart TB
 A & B--> C & D
 `,
     type: "flowchart",
   },
   {
-    name: "Multiple nodes linkes to describe a dependencies using another syntax",
-    definition: `flowchart TB
-A --> C
-A --> D
-B --> C
-B --> D
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Circle arrow and Cross arrow",
+    name: "新型箭头类型",
     definition: `flowchart LR
 A --o B
-B --x C
+A --x B
 `,
     type: "flowchart",
   },
   {
-    name: "Multi directional arrows",
+    name: "多方向箭头",
     definition: `flowchart LR
 A o--o B
-B <--> C
-C x--x D
+A <--> B
+A x--x B
 `,
     type: "flowchart",
   },
   {
-    name: "Special characters that break syntax",
-    definition: `flowchart LR
-id1["This is the (text) in the box"]
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Entity codes to escape characters",
-    definition: `flowchart LR
-A["A double quote:#quot;"] -->B["A dec char:#9829;"]
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Subgraphs",
+    name: "子图",
     definition: `flowchart TB
 c1-->a2
-subgraph one
+subgraph 第一个
 a1-->a2
 end
-subgraph two
+subgraph 第二个
 b1-->b2
 end
-subgraph three
+subgraph 第三个
 c1-->c2
 end
 `,
     type: "flowchart",
   },
   {
-    name: "Subgraph with explicit id",
+    name: "子图中的子图",
     definition: `flowchart TB
 c1-->a2
-subgraph ide1 [one]
-a1-->a2
-end
+subgraph IDE
+  subgraph aa1 [集成开发环境]
+    a1-->a2
+  end
+  subgraph bb1 [中间件]
+    b1-->b2
+  end
+end`,
+    type: "flowchart",
+  },
+  {
+    name: "Beta：子图方向",
+    definition: `flowchart LR
+  subgraph TOP
+    direction TB
+    subgraph B1
+        direction RL
+        i1 -->f1
+    end
+    subgraph B2
+        direction BT
+        i2 -->f2
+    end
+  end
+  A --> TOP --> B
+  B1 --> B2
 `,
     type: "flowchart",
   },
   {
-    name: "Links between subgraphs",
+    name: "子图与子图之间的交互",
     definition: `flowchart TB
 c1-->a2
-subgraph one
+subgraph 第一个
 a1-->a2
 end
-subgraph two
+subgraph 第二个
 b1-->b2
 end
-subgraph three
+subgraph 第三个
 c1-->c2
 end
-one --> two
-three --> two
-two --> c2
+第一个 --> 第二个
+第三个 --> 第二个
+第二个 --> c2
 `,
     type: "flowchart",
   },
   {
-    name: "Direction in subgraphs",
+    name: "样式和类",
     definition: `flowchart LR
-subgraph TOP
-direction TB
-subgraph B1
-    direction RL
-    i1 -->f1
-end
-subgraph B2
-    direction BT
-    i2 -->f2
-end
-end
-A --> TOP --> B
-B1 --> B2
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Markdown Strings",
-    definition: `flowchart LR
-subgraph "One"
-a("\`The **cat**
-in the hat\`") -- "edge label" --> b{{"\`The **dog** in the hog\`"}}
-end
-subgraph "\`Two\`"
-c("\`The **cat**
-in the hat\`") -- "\`Bold **edge label**\`" --> d("The dog in the hog")
-end
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Interaction using tooltip",
-    definition: `flowchart LR
-A-->B
-B-->C
-C-->D
-click A callback "Tooltip for a callback"
-click B "https://www.github.com" "This is a tooltip for a link"
-click A call callback() "Tooltip for a callback"
-click B href "https://www.github.com" "This is a tooltip for a link"
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Interaction using link",
-    definition: `flowchart LR
-A-->B
-B-->C
-C-->D
-D-->E
-click A "https://www.github.com" _blank
-click B "https://www.github.com" "Open this in a new tab" _blank
-click C href "https://www.github.com" _blank
-click D href "https://www.github.com" "Open this in a new tab" _blank
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Comments",
-    definition: `flowchart LR
-%% this is a comment A -- text --> B{node}
-A -- text --> B -- text2 --> C
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Styling a node",
-    definition: `flowchart LR
-id1(Start)-->id2(Stop)
+id1(开始)-->id2(结束)
 style id1 fill:#f9f,stroke:#333,stroke-width:4px
 style id2 fill:#bbf,stroke:#f66,stroke-width:2px,color:#fff,stroke-dasharray: 5 5
 `,
     type: "flowchart",
   },
   {
-    name: "Styling a node using class",
+    name: "类",
     definition: `flowchart LR
-    A:::foo & B:::bar --> C:::foobar
-    classDef foo stroke:#1971c2, fill:#4dabf7
-    classDef bar stroke:#d6336c, fill:#f783ac
-    classDef foobar stroke:#00f stroke-width:2px`,
+A:::someclass --> B
+classDef someclass fill:#f96;
+`,
     type: "flowchart",
   },
   {
-    name: "Classes",
+    name: "CSS类",
     definition: `flowchart LR
 A-->B[AAABBB]
 B-->D
-class A cssClass
+class A cssClass;
 `,
     type: "flowchart",
   },
   {
-    name: "Basic support for fontawesome",
-    definition: `flowchart TD
-B["fab:fa-twitter for peace"]
-B-->C[fa:fa-ban forbidden]
-B-->D(fa:fa-spinner)
-B-->E(A fa:fa-camera-retro perhaps?)
-`,
-    type: "flowchart",
-  },
-  {
-    name: "Graph declarations with spaces between vertices and link and without semicolon",
+    name: "默认类",
     definition: `flowchart LR
-A[Hard edge] -->|Link text| B(Round edge)
-B --> C{Decision}
-C -->|One| D[Result one]
-C -->|Two| E[Result two]
+A[AAA]-->B[BBB]
+B-->D[DDD]
+classDef default fill:#f9f,stroke:#333,stroke-width:4px;
 `,
     type: "flowchart",
   },
   {
-    name: "Complex Case 1",
+    name: "基础的fontawesome支持",
     definition: `flowchart TD
-  A[Start] --> B{Decision 1}
-  B -->|Yes| C[Action 1]
-  B -->|No| D[Action 2]
-  C --> E{Decision 2}
-  D --> E
-  E -->|Yes| F[Action 3]
-  E -->|No| G[Action 4]
-  F --> H{Decision 3}
-  G --> H
-  H -->|Yes| I[Action 5]
-  H -->|No| J[Action 6]
-  I --> K[End]
-  J --> K`,
-    type: "flowchart",
-  },
-  {
-    name: "Complex Case 2",
-    definition: `flowchart TD
-
-  A[Start] --> B[Initialize]
-
-  B[Initialize] --> C[Input Data]
-  C[Input Data] --> D{Data Valid?}
-
-  D{Data Valid?} -- Yes --> E[Process Data]
-  E[Process Data] --> F{More Data?}
-  F{More Data?} -- Yes --> C[Input Data]
-  F{More Data?} -- No --> G[Generate Output]
-
-  D{Data Valid?} -- No --> I[Report Error]
-  I[Report Error] --> H[End]
-
-  B[Initialize] --> J[Task 1]
-  J[Task 1] --> K[Task 2]
-  K[Task 2] --> L[Task 3]
-  L[Task 3] --> M[Task 4]
-  M[Task 4] --> N[Task 5]
-  N[Task 5] --> O[Task 6]
-  O[Task 6] --> P[Task 7]
-  P[Task 7] --> Q[Task 8]
-  Q[Task 8] --> R[Task 9]
-  R[Task 9] --> S[Task 10]
-  S[Task 10] --> T[End]
-
-  U[Decision] --> V[Decision Point]
-  V[Decision Point] --> W{Condition 1}
-  W{Condition 1} -- Yes --> X[Option 1]
-  X[Option 1] --> Y[End Option 1]
-  W{Condition 1} -- No --> Z[Option 2]
-  Z[Option 2] --> Y[End Option 2]
-  Y[End Option 1] --> U[Decision]
-
-  AA[Loop] --> AB[Loop Start]
-  AB[Loop Start] --> AC[Loop Condition]
-  AC[Loop Condition] -- Yes --> AD[Loop Task]
-  AD[Loop Task] --> AE[Loop End]
-  AC[Loop Condition] -- No --> AF[Exit Loop]
-  AF[Exit Loop] --> AE[Loop End]
-  AE[Loop End] --> AA[Loop]
-
-  AG[Subprocess] --> AH[Start Subprocess]
-  AH[Start Subprocess] --> AI[Subprocess Task 1]
-  AI[Subprocess Task 1] --> AJ[Subprocess Task 2]
-  AJ[Subprocess Task 2] --> AK[Subprocess Task 3]
-  AK[Subprocess Task 3] --> AL[End Subprocess]
-
-  A[Start] --> B[Initialize]
-  B[Initialize] --> J[Task 1]
-  J[Task 1] --> U[Decision]
-  U[Decision] --> AA[Loop]
-  AA[Loop] --> AG[Subprocess]
-  AG[Subprocess] --> J[Task 1]
-  AG[Subprocess] --> B[Initialize]
+B["fa:fa-twitter 推特"]
+B-->C[fa:fa-ban 禁用]
+B-->D(fa:fa-spinner 加载中);
+B-->E(A fa:fa-camera-retro 可能隐藏文本);
 `,
     type: "flowchart",
   },
   {
-    name: "Multiple Edges, Relations to a Single Entity",
-    definition: `flowchart LR
-    style Entity1 fill: gold, stroke:#333, stroke-width:4px
-    
-    Entity1[Entity 1]
-    Entity2[Entity 2 fa:fa-suitcase]
-    Entity3[Entity 3 fa:fa-suitcase]
-    Entity4[Entity 4]
-    Entity5[Entity 5]
-    Entity6[Entity 6<br><sub>Entity6</sub>]
-    Entity7[Entity 7]
-    
-    Entity2 -..->|Relation1| Entity1
-    Entity3 -..->|Relation2| Entity1
-    Entity4 -..->|Relation3| Entity1
-    Entity3 -..->|Relation4| Entity1
-    Entity5 -..->|Relation5| Entity1
-    Entity5 -..->|Relation6| Entity1
-    Entity6 -..->|Relation7| Entity1
-    Entity7 -..->|Relation8| Entity1
-    
-    Entity8[Entity 8<br><sub>Entity8</sub>]
-    Entity1[Entity 1]
-    Entity9[Entity 9<br><sub>Entity9</sub>]
-    Entity10[Entity 10]
-    Entity4[Entity 4]
-    Entity11[Entity 11]
-    Entity12[Entity 12]
-    Entity13[Entity 13<br><sub>Entity13</sub>]
-    Entity14[Entity 14]
-    Entity15[Entity 15]
-    Entity16[Entity 16 fa:fa-suitcase]
-    Entity17[Entity 17 fa:fa-suitcase]
-    Entity18[Entity 18 fa:fa-suitcase]
-    Entity19[Entity 19 fa:fa-suitcase]
-    
-    Entity1 -..->|Relation9| Entity8
-    Entity1 -..->|Relation10| Entity9
-    Entity1 -..->|Relation11| Entity10
-    Entity1 -..->|Relation12| Entity4
-    Entity1 ===>|fa:fa-link Relation13| Entity11
-    Entity1 -..->|Relation14| Entity12
-    Entity1 -..->|Relation15| Entity13
-    Entity1 -..->|Relation16| Entity14
-    Entity1 ===>|fa:fa-link Relation17| Entity15
-    Entity1 -..->|Relation18| Entity16
-    Entity1 -..->|Relation19| Entity17
-    Entity1 -..->|Relation20| Entity17
-    Entity1 -..->|Relation21| Entity17
-    Entity1 -..->|Relation22| Entity18
-    Entity1 -..->|Relation23| Entity19
+    name: "图的方向",
+    definition: `flowchart BT
+A[我是文本] --> B{决策}
+B -->|是| C[A]
+B -->|否| D[B]
+C --> D
 `,
     type: "flowchart",
   },
   {
-    name: "When some edges aren't present in DOM",
-    definition: `flowchart TB   
-    subgraph conference
-        frontend
-        backend
-        security
-    end
-    frontend --> |Dive into frontend frameworks| conference
-    backend --> |Learn all about backend| conference
-    security --> |securing web apps| conference`,
-    type: "flowchart",
-  },
-  {
-    name: "平方萌萌哒字体 - 中文支持",
+    name: "平方萌萌哒字体 - 中文支持 🎨",
     definition: `flowchart TD
-A[开始 🎨] --> B{使用平方萌萌哒字体?}
-B -->|是的| C[显示萌萌哒中文字体 ✨]
-B -->|不是| D[使用系统默认字体]
-C --> E[图表更可爱了！🥰]
-D --> F[也很不错～]
-E --> G[结束]
-F --> G
-G --> H[谢谢使用！]
+开始([🚀 开始项目]) --> 检查{💭 需要什么？}
+检查 -->|编程| 代码[👨‍💻 写代码]
+检查 -->|设计| 设计[🎨 做设计]
+检查 -->|测试| 测试[🧪 进行测试]
 
-style A fill:#ff9999,stroke:#333,stroke-width:2px
-style C fill:#99ff99,stroke:#333,stroke-width:2px
-style E fill:#ffff99,stroke:#333,stroke-width:2px
-style H fill:#ff99ff,stroke:#333,stroke-width:2px
+代码 --> 调试{🐛 有bug吗？}
+调试 -->|是| 修复[🔧 修复问题]
+调试 -->|否| 完成
+
+设计 --> 审核{👀 设计OK吗？}
+审核 -->|否| 修改[✏️ 修改设计]
+审核 -->|是| 完成
+
+测试 --> 结果{📊 测试通过？}
+结果 -->|否| 修复
+结果 -->|是| 完成
+
+修复 --> 代码
+修改 --> 设计
+完成([🎉 项目完成])
+
+style 开始 fill:#e1f5fe
+style 完成 fill:#c8e6c9
+style 检查 fill:#fff3e0
+style 调试 fill:#fce4ec
+style 审核 fill:#f3e5f5
+style 结果 fill:#e8f5e8
 `,
     type: "flowchart",
   },

@@ -62,29 +62,29 @@ const App = () => {
       <div className="mermaid-container">
         <div className="mermaid-header-container">
           <section id="custom-test">
-            <h1>{"Custom Test"}</h1>
-            {"Supports only "}
+            <h1>{"自定义测试 🎨"}</h1>
+            {"目前支持 "}
             <a
               target="_blank"
               href="https://mermaid.js.org/syntax/flowchart.html"
             >
-              {"Flowchart"}
+              {"流程图"}
             </a>
-            {", "}
+            {"、"}
             <a
               target="_blank"
               href="https://mermaid.js.org/syntax/sequenceDiagram.html"
             >
-              {"Sequence "}
+              {"时序图"}
             </a>
-            {"and "}
+            {" 和 "}
             <a
               target="_blank"
               href="https://mermaid.js.org/syntax/classDiagram.html"
             >
-              {"Class "}
+              {"类图"}
             </a>
-            {"diagrams."}
+            {"，所有图表都支持平方萌萌哒中文手写字体！"}
             <br />
             <CustomTest
               activeTestCaseIndex={activeTestCaseIndex}

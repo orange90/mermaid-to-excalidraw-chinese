@@ -5,7 +5,7 @@ const GitHubCorner = () => {
   return (
     <>
       <a
-        href="https://github.com/excalidraw/mermaid-to-excalidraw"
+        href="https://github.com/orange90/mermaid-to-excalidraw-chinese"
         className="github-corner"
         aria-label="View source on GitHub"
       >

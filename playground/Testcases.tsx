@@ -17,11 +17,11 @@ interface TestcasesProps {
 }
 
 const Testcases = ({ onChange }: TestcasesProps) => {
-  const testcaseTypes: { name: string; testcases: TestCase[] }[] = [
-    { name: "Flowchart", testcases: FLOWCHART_DIAGRAM_TESTCASES },
-    { name: "Sequence", testcases: SEQUENCE_DIAGRAM_TESTCASES },
-    { name: "Class", testcases: CLASS_DIAGRAM_TESTCASES },
-    { name: "Unsupported", testcases: UNSUPPORTED_DIAGRAM_TESTCASES },
+  const testcaseTypes: { name: string; displayName: string; testcases: TestCase[] }[] = [
+    { name: "Flowchart", displayName: "流程图", testcases: FLOWCHART_DIAGRAM_TESTCASES },
+    { name: "Sequence", displayName: "时序图", testcases: SEQUENCE_DIAGRAM_TESTCASES },
+    { name: "Class", displayName: "类图", testcases: CLASS_DIAGRAM_TESTCASES },
+    { name: "Unsupported", displayName: "不支持的图表", testcases: UNSUPPORTED_DIAGRAM_TESTCASES },
   ];
 
   const allTestCases = testcaseTypes.flatMap((type) => type.testcases);
@@ -29,16 +29,16 @@ const Testcases = ({ onChange }: TestcasesProps) => {
   let testCaseIndex = 0;
   return (
     <div>
-      {testcaseTypes.map(({ name, testcases }) => {
+      {testcaseTypes.map(({ name, displayName, testcases }) => {
         const baseId = name.toLowerCase();
         return (
           <Fragment key={baseId}>
             <h2>
-              {name} {"Diagrams"}
+              {displayName} {"示例 🎨"}
             </h2>
             <details>
               <summary>
-                {name} {"Diagram Examples"}
+                {displayName} {"测试用例"}
               </summary>
               <div id={`${baseId}-container`} className="testcase-container">
                 {testcases.map((testcase, index) => {

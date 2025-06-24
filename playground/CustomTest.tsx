@@ -40,11 +40,11 @@ const CustomTest = ({
             onChange(e.target.value, "custom");
           }}
           style={{ marginTop: "1rem" }}
-          placeholder="Input Mermaid Syntax"
+          placeholder="请输入 Mermaid 语法..."
         />
         <br />
         <button type="submit" id="render-excalidraw-btn">
-          {"Render to Excalidraw"}
+          {"渲染为 Excalidraw 图表 ✨"}
         </button>
       </form>
 
@@ -56,11 +56,11 @@ const CustomTest = ({
           />
 
           <details id="parsed-data-details">
-            <summary>{"Parsed data from parseMermaid"}</summary>
+            <summary>{"parseMermaid 解析的数据"}</summary>
             <pre id="custom-parsed-data">
               {JSON.stringify(mermaidData.output, null, 2)}
             </pre>
-            {mermaidData.error && <div id="error">{mermaidData.error}</div>}
+            {mermaidData.error && <div id="error">{"错误: " + mermaidData.error}</div>}
           </details>
         </>
       )}
