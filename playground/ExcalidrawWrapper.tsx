@@ -13,72 +13,90 @@ interface ExcalidrawWrapperProps {
   mermaidOutput: MermaidData["output"];
 }
 
-// 简化的字体加载检查
-const checkFontAvailability = () => {
-  return new Promise<boolean>((resolve) => {
-    // 检查字体文件是否可访问
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = './fonts/PingFangMengMeng-2.ttf';
-  });
-};
+// 简单直接的字体重写
+const setupCustomFont = async () => {
+  try {
+    // 尝试访问Excalidraw内部的字体系统
+    // 这是一个hack方法，直接修改全局对象
+    (window as any).ExcalidrawFontFamily = {
+      1: 'PingFangMengMeng, PingFang SC, 苹方, Hiragino Sans GB, Microsoft YaHei, 微软雅黑, Virgil, Segoe UI Emoji',
+      2: 'Nunito',
+      3: 'Comic Shanns'
+    };
 
-// 更直接的Canvas字体拦截
-const interceptCanvasFontRendering = () => {
-  // 拦截所有Canvas 2D Context的font设置
-  const originalFont = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
-  if (originalFont && originalFont.set) {
-    Object.defineProperty(CanvasRenderingContext2D.prototype, 'font', {
-      set: function(value: string) {
-        let newValue = value;
-        // 使用更强大的中文字体回退链替换
-        const chineseFontFallback = `'PingFangMengMeng', 'PingFang SC', '苹方', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑'`;
-        
-        if (value.includes('Virgil') || value.includes('Arial') || value.includes('sans-serif')) {
-          // 替换为中文字体链 + 原始字体
-          newValue = value.replace(/(Virgil|Arial)/g, `${chineseFontFallback}, $1`);
-          newValue = newValue.replace(/sans-serif/g, `${chineseFontFallback}, sans-serif`);
-          // 移除调试日志，保持静默
-        }
-        originalFont.set?.call(this, newValue);
-      },
-      get: originalFont.get,
-      configurable: true
+    // 同时修改document.fonts的Virgil字体
+    const pingFangFont = new FontFace(
+      'Virgil', // 冒充Virgil字体
+      'url(./fonts/PingFangMengMeng-2.ttf)',
+      { weight: 'normal', style: 'normal' }
+    );
+    
+    await pingFangFont.load();
+    
+    // 删除原有的Virgil字体（如果存在）
+    document.fonts.forEach(font => {
+      if (font.family === 'Virgil') {
+        document.fonts.delete(font);
+      }
     });
+    
+    // 添加我们的字体作为Virgil
+    document.fonts.add(pingFangFont);
+    
     return true;
+  } catch (error) {
+    return false;
   }
-  return false;
 };
 
-// 注入自定义CSS来强制字体替换
-const injectFontCSS = () => {
-  const style = document.createElement('style');
-  style.id = 'pingfang-mengmeng-override';
-  style.textContent = `
-    /* 强制覆盖所有可能的字体设置 */
-    .excalidraw canvas {
-      font-family: 'PingFangMengMeng', 'PingFang SC', '苹方', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
+// 覆盖Excalidraw的字体映射
+const overrideExcalidrawFonts = () => {
+  // 等待Excalidraw完全加载
+  const checkAndOverride = () => {
+    try {
+      // 尝试访问Excalidraw内部的字体映射
+      const canvas = document.querySelector('.excalidraw canvas') as HTMLCanvasElement;
+      if (canvas && canvas.getContext) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          // 覆盖Canvas的font属性设置
+          const originalFont = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
+          if (originalFont) {
+            Object.defineProperty(ctx, 'font', {
+              set: function(value: string) {
+                // 如果字体设置包含Virgil，替换为中文字体
+                let newValue = value;
+                const chineseFonts = 'PingFang SC, 苹方, Hiragino Sans GB, Microsoft YaHei, 微软雅黑';
+                if (value.includes('Virgil') || value.includes('font-family-1') || value.includes('handwritten')) {
+                  newValue = value.replace(/Virgil|font-family-1|handwritten/g, chineseFonts);
+                }
+                originalFont.set?.call(this, newValue);
+              },
+              get: originalFont.get,
+              configurable: true
+            });
+          }
+        }
+      }
+    } catch (error) {
+      // 静默处理错误
     }
-    
-    /* 覆盖Excalidraw内部的字体设置 */
-    * {
-      --excalidraw-font-family-1: 'PingFangMengMeng', 'PingFang SC', '苹方', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
-    }
-    
-    /* 额外的强制样式 */
-    .excalidraw .canvas-wrapper canvas {
-      font-family: 'PingFangMengMeng', 'PingFang SC', '苹方', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
-    }
-  `;
+  };
+
+  // 立即执行一次
+  checkAndOverride();
   
-  // 移除之前的样式
-  const existing = document.getElementById('pingfang-mengmeng-override');
-  if (existing) {
-    existing.remove();
-  }
+  // 使用MutationObserver监听DOM变化
+  const observer = new MutationObserver(() => {
+    checkAndOverride();
+  });
   
-  document.head.appendChild(style);
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+  return () => observer.disconnect();
 };
 
 const ExcalidrawWrapper = ({
@@ -88,33 +106,16 @@ const ExcalidrawWrapper = ({
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
 
-  // 设置字体替换（静默模式）
+  // 设置自定义字体
   useEffect(() => {
-    const setupFont = async () => {
-      try {
-        // 1. 注入CSS
-        injectFontCSS();
-        
-        // 2. 设置Canvas拦截
-        interceptCanvasFontRendering();
-        
-        // 3. 检查字体文件是否可用（静默）
-        await checkFontAvailability();
-        
-        // 4. 强制重新渲染（如果API可用）
-        if (excalidrawAPI) {
-          setTimeout(() => {
-            excalidrawAPI.refresh();
-          }, 100);
-        }
-        
-      } catch (error) {
-        // 静默处理错误
+    setupCustomFont().then((success) => {
+      if (success) {
+        // 字体设置成功后，开始覆盖字体渲染
+        const cleanup = overrideExcalidrawFonts();
+        return cleanup;
       }
-    };
-
-    setupFont();
-  }, [excalidrawAPI]);
+    });
+  }, []);
 
   useEffect(() => {
     if (!excalidrawAPI) {
@@ -128,7 +129,7 @@ const ExcalidrawWrapper = ({
 
     const { elements, files } = graphToExcalidraw(mermaidOutput, {
       fontSize: DEFAULT_FONT_SIZE,
-      fontFamily: FONT_FAMILY.HANDWRITTEN, // 使用手写字体ID
+      fontFamily: FONT_FAMILY.HANDWRITTEN, // 使用手写字体ID（现在会是中文字体）
     });
 
     excalidrawAPI.updateScene({
@@ -149,7 +150,7 @@ const ExcalidrawWrapper = ({
         initialData={{
           appState: {
             viewBackgroundColor: "#fafafa",
-            currentItemFontFamily: FONT_FAMILY.HANDWRITTEN,
+            currentItemFontFamily: FONT_FAMILY.HANDWRITTEN, // 使用手写字体（现在应该是中文字体）
           },
         }}
         excalidrawAPI={(api) => setExcalidrawAPI(api)}
