@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build:playground",
+  "outputDirectory": "public",
+  "framework": "vite",
+  "installCommand": "npm install"
+} 
