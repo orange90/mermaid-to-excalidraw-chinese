@@ -1,5 +1,15 @@
 export const DEFAULT_FONT_SIZE = 20;
 
+// Font families supported by Excalidraw
+export const FONT_FAMILY = {
+  /** Excalifont - handwritten font (supports Chinese characters) */
+  HANDWRITTEN: 1,
+  /** Nunito - normal font */
+  NORMAL: 2,
+  /** Comic Shanns - code font */
+  CODE: 3,
+} as const;
+
 export const SVG_TO_SHAPE_MAPPER: { [key: string]: "rectangle" | "ellipse" } = {
   rect: "rectangle",
   circle: "ellipse",

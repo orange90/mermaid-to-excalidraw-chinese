@@ -5,7 +5,7 @@ import {
 } from "@excalidraw/excalidraw";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types.js";
 import { graphToExcalidraw } from "../src/graphToExcalidraw";
-import { DEFAULT_FONT_SIZE } from "../src/constants";
+import { DEFAULT_FONT_SIZE, FONT_FAMILY } from "../src/constants";
 import type { MermaidData } from "./";
 
 interface ExcalidrawWrapperProps {
@@ -32,6 +32,7 @@ const ExcalidrawWrapper = ({
 
     const { elements, files } = graphToExcalidraw(mermaidOutput, {
       fontSize: DEFAULT_FONT_SIZE,
+      fontFamily: FONT_FAMILY.HANDWRITTEN, // Use handwritten font (supports Chinese)
     });
 
     excalidrawAPI.updateScene({
@@ -52,7 +53,7 @@ const ExcalidrawWrapper = ({
         initialData={{
           appState: {
             viewBackgroundColor: "#fafafa",
-            currentItemFontFamily: 1,
+            currentItemFontFamily: FONT_FAMILY.HANDWRITTEN, // Chinese handwriting support
           },
         }}
         excalidrawAPI={(api) => setExcalidrawAPI(api)}

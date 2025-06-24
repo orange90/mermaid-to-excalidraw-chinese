@@ -79,6 +79,7 @@ export const FlowchartToExcalidrawSkeletonConverter = new GraphConverter({
   converter: (graph: Flowchart, options) => {
     const elements: ExcalidrawElementSkeleton[] = [];
     const fontSize = options.fontSize;
+    const fontFamily = options.fontFamily;
     const { getGroupIds, getParentId } = computeGroupIds(graph);
 
     // SubGraphs
@@ -97,6 +98,7 @@ export const FlowchartToExcalidrawSkeletonConverter = new GraphConverter({
           groupIds,
           text: getText(subGraph),
           fontSize,
+          fontFamily,
           verticalAlign: "top",
         },
       };
@@ -130,6 +132,7 @@ export const FlowchartToExcalidrawSkeletonConverter = new GraphConverter({
           groupIds,
           text: getText(vertex),
           fontSize,
+          fontFamily,
           ...labelStyle,
         },
         link: vertex.link || null,
@@ -163,6 +166,7 @@ export const FlowchartToExcalidrawSkeletonConverter = new GraphConverter({
               groupIds,
               text: getText(vertex),
               fontSize,
+              fontFamily,
             },
           };
           containerElement = { ...containerElement, groupIds, type: "ellipse" };
@@ -216,7 +220,7 @@ export const FlowchartToExcalidrawSkeletonConverter = new GraphConverter({
         strokeStyle: edge.stroke === "dotted" ? "dashed" : undefined,
         points,
         ...(edge.text
-          ? { label: { text: getText(edge), fontSize, groupIds } }
+          ? { label: { text: getText(edge), fontSize, fontFamily, groupIds } }
           : {}),
         roundness: {
           type: 2,

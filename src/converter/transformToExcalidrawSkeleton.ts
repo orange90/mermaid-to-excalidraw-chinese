@@ -29,7 +29,7 @@ export const transformToExcalidrawLineSkeleton = (line: Line) => {
   return lineElement;
 };
 
-export const transformToExcalidrawTextSkeleton = (element: Text) => {
+export const transformToExcalidrawTextSkeleton = (element: Text, fontFamily?: number) => {
   const textElement: ExcalidrawElementSkeleton = {
     type: "text",
     x: element.x,
@@ -38,6 +38,7 @@ export const transformToExcalidrawTextSkeleton = (element: Text) => {
     height: element.height,
     text: normalizeText(element.text) || "",
     fontSize: element.fontSize,
+    fontFamily: fontFamily || 1,
     verticalAlign: "middle",
   };
   if (element.groupId) {
@@ -50,7 +51,8 @@ export const transformToExcalidrawTextSkeleton = (element: Text) => {
 };
 
 export const transformToExcalidrawContainerSkeleton = (
-  element: Exclude<Node, Line | Arrow | Text>
+  element: Exclude<Node, Line | Arrow | Text>,
+  fontFamily?: number
 ) => {
   let extraProps = {};
   if (element.type === "rectangle" && element.subtype === "activation") {
@@ -69,6 +71,7 @@ export const transformToExcalidrawContainerSkeleton = (
     label: {
       text: normalizeText(element?.label?.text || ""),
       fontSize: element?.label?.fontSize,
+      fontFamily: fontFamily || 1,
       verticalAlign: element.label?.verticalAlign || "middle",
       strokeColor: element.label?.color || "#000",
       groupIds: element.groupId ? [element.groupId] : [],
@@ -87,7 +90,7 @@ export const transformToExcalidrawContainerSkeleton = (
   return container;
 };
 
-export const transformToExcalidrawArrowSkeleton = (arrow: Arrow) => {
+export const transformToExcalidrawArrowSkeleton = (arrow: Arrow, fontFamily?: number) => {
   const arrowElement: ExcalidrawElementSkeleton = {
     type: "arrow",
     x: arrow.startX,
@@ -104,6 +107,7 @@ export const transformToExcalidrawArrowSkeleton = (arrow: Arrow) => {
     label: {
       text: normalizeText(arrow?.label?.text || ""),
       fontSize: 16,
+      fontFamily: fontFamily || 1,
     },
     roundness: {
       type: 2,

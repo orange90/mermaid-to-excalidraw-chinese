@@ -1,4 +1,4 @@
-import { DEFAULT_FONT_SIZE } from "./constants.js";
+import { DEFAULT_FONT_SIZE, FONT_FAMILY } from "./constants.js";
 import { graphToExcalidraw } from "./graphToExcalidraw.js";
 import { parseMermaid } from "./parseMermaid.js";
 
@@ -36,11 +36,20 @@ export interface MermaidConfig {
 
 export interface ExcalidrawConfig {
   fontSize?: number;
+  /**
+   * Font family for the text elements
+   * @default 1 (Excalifont - handwritten)
+   * 1: Excalifont (handwritten, supports Chinese characters)
+   * 2: Nunito (normal)
+   * 3: Comic Shanns (code)
+   */
+  fontFamily?: 1 | 2 | 3;
 }
 
 const parseMermaidToExcalidraw = async (
   definition: string,
-  config?: MermaidConfig
+  config?: MermaidConfig,
+  excalidrawConfig?: ExcalidrawConfig
 ) => {
   const mermaidConfig = config || {};
   const fontSize =
@@ -53,11 +62,13 @@ const parseMermaidToExcalidraw = async (
       fontSize: `${fontSize * 1.25}px`,
     },
   });
-  // Only font size supported for excalidraw elements
+  // Font size and font family supported for excalidraw elements
   const excalidrawElements = graphToExcalidraw(parsedMermaidData, {
     fontSize,
+    fontFamily: excalidrawConfig?.fontFamily || 1,
   });
   return excalidrawElements;
 };
 
-export { parseMermaidToExcalidraw };
+export { parseMermaidToExcalidraw, FONT_FAMILY };
+export default parseMermaidToExcalidraw;

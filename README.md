@@ -25,11 +25,16 @@ yarn build
 ## Get started
 
 ```ts
-parseMermaidToExcalidraw(diagramDefinition: string, config?: MermaidConfig)
+parseMermaidToExcalidraw(
+  diagramDefinition: string, 
+  config?: MermaidConfig,
+  excalidrawConfig?: ExcalidrawConfig
+)
 ```
 
 The `diagramDefinition` is the mermaid diagram definition.
-and `config` is the mermaid config. You can use the `config` param when you want to pass some custom config to mermaid.
+`config` is the mermaid config. You can use the `config` param when you want to pass some custom config to mermaid.
+`excalidrawConfig` is the excalidraw configuration where you can specify font options including Chinese handwriting font support.
 
 Currently `mermaid-to-excalidraw` only supports the :point_down: config params
 
@@ -67,10 +72,30 @@ Currently `mermaid-to-excalidraw` only supports the :point_down: config params
 }
 ```
 
+**ExcalidrawConfig options:**
+
+```ts
+{
+  /**
+   * Font size for text elements
+   * @default 20
+   */
+  fontSize?: number;
+  /**
+   * Font family for text elements
+   * @default 1 (Excalifont - handwritten with Chinese support)
+   * 1: Excalifont (handwritten, supports Chinese characters)
+   * 2: Nunito (normal)
+   * 3: Comic Shanns (code)
+   */
+  fontFamily?: 1 | 2 | 3;
+}
+```
+
 Example code:
 
 ```ts
-import { parseMermaidToExcalidraw } from "@excalidraw/mermaid-to-excalidraw";
+import { parseMermaidToExcalidraw, FONT_FAMILY } from "@excalidraw/mermaid-to-excalidraw";
 
 try {
   const { elements, files } = await parseMermaidToExcalidraw(
@@ -79,6 +104,9 @@ try {
       themeVariables: {
         fontSize: "25px",
       },
+    },
+    {
+      fontFamily: FONT_FAMILY.HANDWRITTEN, // Use Chinese handwriting font
     }
   );
   // Render elements and files on Excalidraw

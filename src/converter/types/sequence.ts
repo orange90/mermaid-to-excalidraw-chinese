@@ -13,9 +13,10 @@ import {
 import type { ExcalidrawElement } from "../../types.js";
 
 export const SequenceToExcalidrawSkeletonConvertor = new GraphConverter({
-  converter: (chart: Sequence) => {
+  converter: (chart: Sequence, options) => {
     const elements: ExcalidrawElementSkeleton[] = [];
     const activations: ExcalidrawElementSkeleton[] = [];
+    const fontFamily = options.fontFamily;
     Object.values(chart.nodes).forEach((node) => {
       if (!node || !node.length) {
         return;
@@ -30,11 +31,11 @@ export const SequenceToExcalidrawSkeletonConvertor = new GraphConverter({
 
           case "rectangle":
           case "ellipse":
-            excalidrawElement = transformToExcalidrawContainerSkeleton(element);
+            excalidrawElement = transformToExcalidrawContainerSkeleton(element, fontFamily);
             break;
 
           case "text":
-            excalidrawElement = transformToExcalidrawTextSkeleton(element);
+            excalidrawElement = transformToExcalidrawTextSkeleton(element, fontFamily);
             break;
           default:
             throw `unknown type ${element.type}`;
@@ -60,10 +61,10 @@ export const SequenceToExcalidrawSkeletonConvertor = new GraphConverter({
         return;
       }
 
-      elements.push(transformToExcalidrawArrowSkeleton(arrow));
+      elements.push(transformToExcalidrawArrowSkeleton(arrow, fontFamily));
       if (arrow.sequenceNumber) {
         elements.push(
-          transformToExcalidrawContainerSkeleton(arrow.sequenceNumber)
+          transformToExcalidrawContainerSkeleton(arrow.sequenceNumber, fontFamily)
         );
       }
     });
@@ -76,10 +77,10 @@ export const SequenceToExcalidrawSkeletonConvertor = new GraphConverter({
         elements.push(transformToExcalidrawLineSkeleton(line));
       });
       texts.forEach((text) => {
-        elements.push(transformToExcalidrawTextSkeleton(text));
+        elements.push(transformToExcalidrawTextSkeleton(text, fontFamily));
       });
       nodes.forEach((node) => {
-        elements.push(transformToExcalidrawContainerSkeleton(node));
+        elements.push(transformToExcalidrawContainerSkeleton(node, fontFamily));
       });
     }
 
@@ -129,7 +130,7 @@ export const SequenceToExcalidrawSkeletonConvertor = new GraphConverter({
           height: groupRectHeight,
           bgColor: group.fill,
           id: groupRectId,
-        });
+        }, fontFamily);
         elements.unshift(groupRect);
         const frameId = nanoid();
 

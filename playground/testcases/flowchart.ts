@@ -545,4 +545,15 @@ C -->|Two| E[Result two]
     security --> |securing web apps| conference`,
     type: "flowchart",
   },
+  {
+    name: "Chinese text support",
+    definition: `flowchart TD
+A[开始] --> B{是否为中文?}
+B -->|是| C[显示中文字体]
+B -->|否| D[显示英文字体]
+C --> E[结束]
+D --> E
+`,
+    type: "flowchart",
+  },
 ];

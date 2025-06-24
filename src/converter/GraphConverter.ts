@@ -20,6 +20,7 @@ export class GraphConverter<T = Flowchart | Sequence> {
     return this.converter(graph, {
       ...config,
       fontSize: config.fontSize || DEFAULT_FONT_SIZE,
+      fontFamily: config.fontFamily || 1,
     });
   };
 }

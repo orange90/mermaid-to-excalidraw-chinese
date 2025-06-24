@@ -11,8 +11,9 @@ import type { ExcalidrawElementSkeleton } from "@excalidraw/excalidraw/types/dat
 import type { Class } from "../../parser/class.js";
 
 export const classToExcalidrawSkeletonConvertor = new GraphConverter({
-  converter: (chart: Class) => {
+  converter: (chart: Class, options) => {
     const elements: ExcalidrawElementSkeleton[] = [];
+    const fontFamily = options.fontFamily;
 
     Object.values(chart.nodes).forEach((node) => {
       if (!node || !node.length) {
@@ -28,11 +29,11 @@ export const classToExcalidrawSkeletonConvertor = new GraphConverter({
 
           case "rectangle":
           case "ellipse":
-            excalidrawElement = transformToExcalidrawContainerSkeleton(element);
+            excalidrawElement = transformToExcalidrawContainerSkeleton(element, fontFamily);
             break;
 
           case "text":
-            excalidrawElement = transformToExcalidrawTextSkeleton(element);
+            excalidrawElement = transformToExcalidrawTextSkeleton(element, fontFamily);
             break;
           default:
             throw `unknown type ${element.type}`;
@@ -53,12 +54,12 @@ export const classToExcalidrawSkeletonConvertor = new GraphConverter({
       if (!arrow) {
         return;
       }
-      const excalidrawElement = transformToExcalidrawArrowSkeleton(arrow);
+      const excalidrawElement = transformToExcalidrawArrowSkeleton(arrow, fontFamily);
       elements.push(excalidrawElement);
     });
 
     Object.values(chart.text).forEach((ele) => {
-      const excalidrawElement = transformToExcalidrawTextSkeleton(ele);
+      const excalidrawElement = transformToExcalidrawTextSkeleton(ele, fontFamily);
 
       elements.push(excalidrawElement);
     });
