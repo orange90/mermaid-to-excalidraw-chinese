@@ -6,7 +6,6 @@ import {
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types.js";
 import { graphToExcalidraw } from "../src/graphToExcalidraw";
 import { DEFAULT_FONT_SIZE, FONT_FAMILY } from "../src/constants";
-import FontTest from "./FontTest";
 import type { MermaidData } from "./";
 
 interface ExcalidrawWrapperProps {
@@ -40,14 +39,13 @@ const interceptCanvasFontRendering = () => {
           // 替换为中文字体链 + 原始字体
           newValue = value.replace(/(Virgil|Arial)/g, `${chineseFontFallback}, $1`);
           newValue = newValue.replace(/sans-serif/g, `${chineseFontFallback}, sans-serif`);
-          console.log('🎨 Canvas字体拦截:', value, '->', newValue);
+          // 移除调试日志，保持静默
         }
         originalFont.set?.call(this, newValue);
       },
       get: originalFont.get,
       configurable: true
     });
-    console.log('✅ Canvas字体拦截器已安装');
     return true;
   }
   return false;
@@ -81,7 +79,6 @@ const injectFontCSS = () => {
   }
   
   document.head.appendChild(style);
-  console.log('✅ 字体CSS已注入');
 };
 
 const ExcalidrawWrapper = ({
@@ -90,30 +87,19 @@ const ExcalidrawWrapper = ({
 }: ExcalidrawWrapperProps) => {
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
-  const [fontStatus, setFontStatus] = useState<'loading' | 'available' | 'fallback'>('loading');
 
-  // 设置字体替换
+  // 设置字体替换（静默模式）
   useEffect(() => {
     const setupFont = async () => {
       try {
-        console.log('🚀 开始设置平方萌萌哒字体...');
-        
         // 1. 注入CSS
         injectFontCSS();
         
         // 2. 设置Canvas拦截
-        const canvasIntercepted = interceptCanvasFontRendering();
+        interceptCanvasFontRendering();
         
-        // 3. 检查字体文件是否可用
-        const fontFileAvailable = await checkFontAvailability();
-        
-        if (fontFileAvailable) {
-          setFontStatus('available');
-          console.log('✅ 平方萌萌哒字体文件可用');
-        } else {
-          setFontStatus('fallback');
-          console.log('⚠️ 字体文件不可用，使用回退方案');
-        }
+        // 3. 检查字体文件是否可用（静默）
+        await checkFontAvailability();
         
         // 4. 强制重新渲染（如果API可用）
         if (excalidrawAPI) {
@@ -123,8 +109,7 @@ const ExcalidrawWrapper = ({
         }
         
       } catch (error) {
-        console.error('❌ 字体设置失败:', error);
-        setFontStatus('fallback');
+        // 静默处理错误
       }
     };
 
@@ -158,19 +143,6 @@ const ExcalidrawWrapper = ({
     }
   }, [mermaidDefinition, mermaidOutput]);
 
-  const getStatusInfo = () => {
-    switch (fontStatus) {
-      case 'loading':
-        return { text: '⏳ 正在设置平方萌萌哒字体...', color: 'rgba(255, 152, 0, 0.9)' };
-      case 'available':
-        return { text: '✅ 平方萌萌哒字体已激活', color: 'rgba(76, 175, 80, 0.9)' };
-      case 'fallback':
-        return { text: '⚠️ 使用字体回退方案', color: 'rgba(255, 193, 7, 0.9)' };
-    }
-  };
-
-  const statusInfo = getStatusInfo();
-
   return (
     <div className="excalidraw-wrapper">
       <Excalidraw
@@ -182,48 +154,6 @@ const ExcalidrawWrapper = ({
         }}
         excalidrawAPI={(api) => setExcalidrawAPI(api)}
       />
-      
-      {/* 字体测试面板 */}
-      <FontTest />
-      
-      {/* 字体状态指示器 */}
-      <div style={{
-        position: 'absolute',
-        bottom: '10px',
-        left: '10px',
-        background: statusInfo.color,
-        color: 'white',
-        padding: '8px 12px',
-        borderRadius: '6px',
-        fontSize: '13px',
-        fontWeight: 'bold',
-        zIndex: 1000,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-        userSelect: 'none'
-      }}>
-        {statusInfo.text}
-      </div>
-
-      {/* 调试信息 */}
-      {fontStatus === 'fallback' && (
-        <div style={{
-          position: 'absolute',
-          bottom: '50px',
-          left: '10px',
-          background: 'rgba(0,0,0,0.8)',
-          color: 'white',
-          padding: '8px 12px',
-          borderRadius: '6px',
-          fontSize: '12px',
-          zIndex: 1000,
-          maxWidth: '300px'
-        }}>
-          <div>💡 调试提示：</div>
-          <div>1. 确保字体文件在 ./fonts/ 目录</div>
-          <div>2. 检查浏览器控制台的详细错误</div>
-          <div>3. 字体替换仍可能生效</div>
-        </div>
-      )}
     </div>
   );
 };
