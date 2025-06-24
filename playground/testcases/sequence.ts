@@ -215,4 +215,35 @@ export const SEQUENCE_DIAGRAM_TESTCASES: TestCase[] = [
     destroy Bob
     Bob->>Alice: I agree`,
   },
+  {
+    type: "sequence",
+    name: "中文时序图 - 平方萌萌哒字体测试",
+    definition: `sequenceDiagram
+    participant 小明 as 👨 小明
+    participant 小红 as 👩 小红
+    participant 系统 as 🖥️ 系统
+
+    小明->>小红: 你好！今天天气真好呢 ☀️
+    小红-->>小明: 是啊，要不要一起去公园？ 🌸
+    
+    rect rgb(255, 248, 220)
+    Note over 小明,小红: 💭 两人商量出游计划
+    小明->>+系统: 查询天气预报 🌤️
+    系统-->>-小明: 今日晴朗，适合出游 ✨
+    end
+    
+    alt 天气很好
+        小明->>小红: 太好了！我们出发吧 🚗
+        小红->>小明: 好的，带上野餐垫 🧺
+    else 天气不好
+        小明->>小红: 改天再去吧 😅
+    end
+    
+    loop 每小时检查
+        系统-->小明: 天气更新通知 📱
+    end
+    
+    小明->>小红: 路上小心哦！ 💝
+    小红-->>小明: 你也是！期待下次见面 🤗`,
+  },
 ];
