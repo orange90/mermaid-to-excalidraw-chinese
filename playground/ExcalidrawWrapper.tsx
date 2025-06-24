@@ -6,7 +6,7 @@ import {
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types/types.js";
 import { graphToExcalidraw } from "../src/graphToExcalidraw";
 import { DEFAULT_FONT_SIZE, FONT_FAMILY } from "../src/constants";
-import { loadPingFangMengMengFont, isPingFangMengMengAvailable } from "./fontManager";
+import FontTest from "./FontTest";
 import type { MermaidData } from "./";
 
 interface ExcalidrawWrapperProps {
@@ -14,97 +14,74 @@ interface ExcalidrawWrapperProps {
   mermaidOutput: MermaidData["output"];
 }
 
-// 字体加载函数现在从fontManager导入
-
-// 简单直接的字体重写
-const setupCustomFont = async () => {
-  try {
-    // 确保字体已加载
-    await loadPingFangMengMengFont();
-    
-    // 尝试访问Excalidraw内部的字体系统
-    // 这是一个hack方法，直接修改全局对象
-    (window as any).ExcalidrawFontFamily = {
-      1: 'PingFangMengMeng, Virgil, Segoe UI Emoji',
-      2: 'Nunito',
-      3: 'Comic Shanns'
-    };
-
-    // 同时修改document.fonts的Virgil字体
-    const pingFangFont = new FontFace(
-      'Virgil', // 冒充Virgil字体
-      'url(./fonts/PingFangMengMeng-2.ttf)',
-      { weight: 'normal', style: 'normal' }
-    );
-    
-    await pingFangFont.load();
-    
-    // 删除原有的Virgil字体（如果存在）
-    document.fonts.forEach(font => {
-      if (font.family === 'Virgil') {
-        document.fonts.delete(font);
-      }
-    });
-    
-    // 添加我们的字体作为Virgil
-    document.fonts.add(pingFangFont);
-    
-    console.log('✅ 已成功替换Virgil字体为平方萌萌哒！');
-    return true;
-  } catch (error) {
-    console.warn('字体替换失败:', error);
-    return false;
-  }
+// 简化的字体加载检查
+const checkFontAvailability = () => {
+  return new Promise<boolean>((resolve) => {
+    // 检查字体文件是否可访问
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = './fonts/PingFangMengMeng-2.ttf';
+  });
 };
 
-// 覆盖Excalidraw的字体映射
-const overrideExcalidrawFonts = () => {
-  // 等待Excalidraw完全加载
-  const checkAndOverride = () => {
-    try {
-      // 尝试访问Excalidraw内部的字体映射
-      const canvas = document.querySelector('.excalidraw canvas') as HTMLCanvasElement;
-      if (canvas && canvas.getContext) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          // 覆盖Canvas的font属性设置
-          const originalFont = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
-          if (originalFont) {
-            Object.defineProperty(ctx, 'font', {
-              set: function(value: string) {
-                // 如果字体设置包含Virgil，替换为平方萌萌哒
-                let newValue = value;
-                if (value.includes('Virgil') || value.includes('font-family-1') || value.includes('handwritten')) {
-                  newValue = value.replace(/Virgil|font-family-1|handwritten/g, 'PingFangMengMeng');
-                  console.log('字体已替换:', value, '->', newValue);
-                }
-                originalFont.set?.call(this, newValue);
-              },
-              get: originalFont.get,
-              configurable: true
-            });
-          }
+// 更直接的Canvas字体拦截
+const interceptCanvasFontRendering = () => {
+  // 拦截所有Canvas 2D Context的font设置
+  const originalFont = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
+  if (originalFont && originalFont.set) {
+    Object.defineProperty(CanvasRenderingContext2D.prototype, 'font', {
+      set: function(value: string) {
+        let newValue = value;
+        // 使用更强大的中文字体回退链替换
+        const chineseFontFallback = `'PingFangMengMeng', 'PingFang SC', '苹方', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑'`;
+        
+        if (value.includes('Virgil') || value.includes('Arial') || value.includes('sans-serif')) {
+          // 替换为中文字体链 + 原始字体
+          newValue = value.replace(/(Virgil|Arial)/g, `${chineseFontFallback}, $1`);
+          newValue = newValue.replace(/sans-serif/g, `${chineseFontFallback}, sans-serif`);
+          console.log('🎨 Canvas字体拦截:', value, '->', newValue);
         }
-      }
-    } catch (error) {
-      console.warn('字体覆盖失败:', error);
+        originalFont.set?.call(this, newValue);
+      },
+      get: originalFont.get,
+      configurable: true
+    });
+    console.log('✅ Canvas字体拦截器已安装');
+    return true;
+  }
+  return false;
+};
+
+// 注入自定义CSS来强制字体替换
+const injectFontCSS = () => {
+  const style = document.createElement('style');
+  style.id = 'pingfang-mengmeng-override';
+  style.textContent = `
+    /* 强制覆盖所有可能的字体设置 */
+    .excalidraw canvas {
+      font-family: 'PingFangMengMeng', 'PingFang SC', '苹方', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
     }
-  };
-
-  // 立即执行一次
-  checkAndOverride();
+    
+    /* 覆盖Excalidraw内部的字体设置 */
+    * {
+      --excalidraw-font-family-1: 'PingFangMengMeng', 'PingFang SC', '苹方', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
+    }
+    
+    /* 额外的强制样式 */
+    .excalidraw .canvas-wrapper canvas {
+      font-family: 'PingFangMengMeng', 'PingFang SC', '苹方', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
+    }
+  `;
   
-  // 使用MutationObserver监听DOM变化
-  const observer = new MutationObserver(() => {
-    checkAndOverride();
-  });
+  // 移除之前的样式
+  const existing = document.getElementById('pingfang-mengmeng-override');
+  if (existing) {
+    existing.remove();
+  }
   
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-
-  return () => observer.disconnect();
+  document.head.appendChild(style);
+  console.log('✅ 字体CSS已注入');
 };
 
 const ExcalidrawWrapper = ({
@@ -113,19 +90,46 @@ const ExcalidrawWrapper = ({
 }: ExcalidrawWrapperProps) => {
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
-  const [fontLoaded, setFontLoaded] = useState(false);
+  const [fontStatus, setFontStatus] = useState<'loading' | 'available' | 'fallback'>('loading');
 
-  // 设置自定义字体
+  // 设置字体替换
   useEffect(() => {
-    setupCustomFont().then((success) => {
-      setFontLoaded(success);
-      if (success) {
-        // 字体设置成功后，开始覆盖字体渲染
-        const cleanup = overrideExcalidrawFonts();
-        return cleanup;
+    const setupFont = async () => {
+      try {
+        console.log('🚀 开始设置平方萌萌哒字体...');
+        
+        // 1. 注入CSS
+        injectFontCSS();
+        
+        // 2. 设置Canvas拦截
+        const canvasIntercepted = interceptCanvasFontRendering();
+        
+        // 3. 检查字体文件是否可用
+        const fontFileAvailable = await checkFontAvailability();
+        
+        if (fontFileAvailable) {
+          setFontStatus('available');
+          console.log('✅ 平方萌萌哒字体文件可用');
+        } else {
+          setFontStatus('fallback');
+          console.log('⚠️ 字体文件不可用，使用回退方案');
+        }
+        
+        // 4. 强制重新渲染（如果API可用）
+        if (excalidrawAPI) {
+          setTimeout(() => {
+            excalidrawAPI.refresh();
+          }, 100);
+        }
+        
+      } catch (error) {
+        console.error('❌ 字体设置失败:', error);
+        setFontStatus('fallback');
       }
-    });
-  }, []);
+    };
+
+    setupFont();
+  }, [excalidrawAPI]);
 
   useEffect(() => {
     if (!excalidrawAPI) {
@@ -139,7 +143,7 @@ const ExcalidrawWrapper = ({
 
     const { elements, files } = graphToExcalidraw(mermaidOutput, {
       fontSize: DEFAULT_FONT_SIZE,
-      fontFamily: FONT_FAMILY.HANDWRITTEN, // 使用手写字体ID（现在会是平方萌萌哒）
+      fontFamily: FONT_FAMILY.HANDWRITTEN, // 使用手写字体ID
     });
 
     excalidrawAPI.updateScene({
@@ -154,33 +158,72 @@ const ExcalidrawWrapper = ({
     }
   }, [mermaidDefinition, mermaidOutput]);
 
+  const getStatusInfo = () => {
+    switch (fontStatus) {
+      case 'loading':
+        return { text: '⏳ 正在设置平方萌萌哒字体...', color: 'rgba(255, 152, 0, 0.9)' };
+      case 'available':
+        return { text: '✅ 平方萌萌哒字体已激活', color: 'rgba(76, 175, 80, 0.9)' };
+      case 'fallback':
+        return { text: '⚠️ 使用字体回退方案', color: 'rgba(255, 193, 7, 0.9)' };
+    }
+  };
+
+  const statusInfo = getStatusInfo();
+
   return (
     <div className="excalidraw-wrapper">
       <Excalidraw
         initialData={{
           appState: {
             viewBackgroundColor: "#fafafa",
-            currentItemFontFamily: FONT_FAMILY.PINGFANG_MENGMENG, // 平方萌萌哒中文字体
+            currentItemFontFamily: FONT_FAMILY.HANDWRITTEN,
           },
         }}
         excalidrawAPI={(api) => setExcalidrawAPI(api)}
       />
+      
+      {/* 字体测试面板 */}
+      <FontTest />
+      
       {/* 字体状态指示器 */}
       <div style={{
         position: 'absolute',
         bottom: '10px',
         left: '10px',
-        background: fontLoaded ? 'rgba(76, 175, 80, 0.9)' : 'rgba(255, 152, 0, 0.9)',
+        background: statusInfo.color,
         color: 'white',
         padding: '8px 12px',
         borderRadius: '6px',
         fontSize: '13px',
         fontWeight: 'bold',
         zIndex: 1000,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+        userSelect: 'none'
       }}>
-        {fontLoaded ? '✅ 平方萌萌哒字体已激活' : '⏳ 正在加载平方萌萌哒字体...'}
+        {statusInfo.text}
       </div>
+
+      {/* 调试信息 */}
+      {fontStatus === 'fallback' && (
+        <div style={{
+          position: 'absolute',
+          bottom: '50px',
+          left: '10px',
+          background: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '8px 12px',
+          borderRadius: '6px',
+          fontSize: '12px',
+          zIndex: 1000,
+          maxWidth: '300px'
+        }}>
+          <div>💡 调试提示：</div>
+          <div>1. 确保字体文件在 ./fonts/ 目录</div>
+          <div>2. 检查浏览器控制台的详细错误</div>
+          <div>3. 字体替换仍可能生效</div>
+        </div>
+      )}
     </div>
   );
 };
