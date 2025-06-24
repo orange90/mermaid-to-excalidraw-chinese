@@ -12,6 +12,13 @@ export const FONT_FAMILY = {
   CODE: 3,
 } as const;
 
+// 自定义字体注册
+export const CUSTOM_FONTS = {
+  1: 'PingFangMengMeng', // 平方萌萌哒字体名称
+  2: 'Nunito',
+  3: 'Comic Shanns',
+} as const;
+
 // 字体名称映射
 export const FONT_FAMILY_NAMES = {
   1: 'PingFangMengMeng, Virgil, Segoe UI Emoji', // 平方萌萌哒，fallback到默认手写字体

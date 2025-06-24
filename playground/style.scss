@@ -7,19 +7,29 @@
   font-display: swap;
 }
 
-// 为Excalidraw应用平方萌萌哒字体
-.excalidraw {
-  .Virgil {
-    font-family: 'PingFangMengMeng', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
-  }
+// 覆盖Excalidraw的Canvas字体渲染
+// 注意：这需要通过JavaScript API而不是CSS来实现
+// 但我们仍然定义CSS作为后备方案
+
+// Excalidraw字体ID映射覆盖
+:root {
+  --excalidraw-font-family-1: 'PingFangMengMeng', 'Virgil', 'Segoe UI Emoji', sans-serif;
+  --excalidraw-font-family-2: 'Nunito', sans-serif;
+  --excalidraw-font-family-3: 'Comic Shanns', monospace;
 }
 
-// 全局字体fallback，包含平方萌萌哒
+// 为了确保字体在Canvas中正确渲染，我们需要通过Excalidraw API
+// 但先定义基础样式作为后备
+.excalidraw canvas {
+  font-family: 'PingFangMengMeng', 'Virgil', 'Segoe UI Emoji', sans-serif !important;
+}
+
+// 全局字体设置，但不影响Excalidraw Canvas
 body {
   margin-top: 0;
   margin-bottom: 0;
   padding: 0;
-  font-family: 'PingFangMengMeng', sans-serif;
+  font-family: sans-serif; // 恢复默认，不影响Excalidraw
   #flowchart-container,
   #unsupported {
     max-width: 48%;
