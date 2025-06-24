@@ -1,7 +1,8 @@
-// 平方萌萌哒字体定义
+// 平方萌萌哒字体定义 - 支持开发和生产环境
 @font-face {
   font-family: 'PingFangMengMeng';
-  src: url('./fonts/PingFangMengMeng-2.ttf') format('truetype');
+  src: url('./fonts/PingFangMengMeng-2.ttf') format('truetype'),
+       url('/PingFangMengMeng-2.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
