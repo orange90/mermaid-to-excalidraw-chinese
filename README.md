@@ -135,7 +135,7 @@ try {
 
 ## Playground
 
-Try out [here](https://mermaid-to-excalidraw.vercel.app).
+Try out [here](https://mermaid-to-excalidraw-chinese.vercel.app).
 
 ## API
 
