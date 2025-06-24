@@ -6,6 +6,19 @@ export default defineConfig({
     outDir: "../public",
     emptyOutDir: true,
     assetsDir: "./",
+    rollupOptions: {
+      // 确保字体文件被包含在构建中
+      external: [],
+      output: {
+        assetFileNames: (assetInfo) => {
+          // 如果是字体文件，放在根目录
+          if (assetInfo.name && assetInfo.name.endsWith('.ttf')) {
+            return '[name].[ext]';
+          }
+          return 'assets/[name]-[hash].[ext]';
+        },
+      },
+    },
   },
   define: {
     "process.env.IS_PREACT": JSON.stringify("false"),
@@ -25,4 +38,7 @@ export default defineConfig({
       ],
     },
   },
+  // 确保字体文件作为静态资源处理
+  publicDir: false, // 禁用默认的public目录
+  assetsInclude: ['**/*.ttf'], // 包含字体文件
 });

@@ -8,87 +8,116 @@ import { graphToExcalidraw } from "../src/graphToExcalidraw";
 import { DEFAULT_FONT_SIZE, FONT_FAMILY } from "../src/constants";
 import type { MermaidData } from "./";
 
+// 通过Vite导入字体文件，这样路径会自动处理
+import fontUrl from './fonts/PingFangMengMeng-2.ttf?url';
+
 interface ExcalidrawWrapperProps {
   mermaidDefinition: MermaidData["definition"];
   mermaidOutput: MermaidData["output"];
 }
 
-// 简单直接的字体重写
+// 系统中文字体回退链
+const SYSTEM_CHINESE_FONTS = 'PingFang SC, 苹方, Hiragino Sans GB, Microsoft YaHei, 微软雅黑, SimSun, 宋体';
+
+// 简单直接的字体重写 - 针对生产环境优化
 const setupCustomFont = async () => {
   try {
-    // 尝试访问Excalidraw内部的字体系统
-    // 这是一个hack方法，直接修改全局对象
+    // 1. 首先设置系统中文字体映射（即使自定义字体失败也能工作）
     (window as any).ExcalidrawFontFamily = {
-      1: 'PingFangMengMeng, PingFang SC, 苹方, Hiragino Sans GB, Microsoft YaHei, 微软雅黑, Virgil, Segoe UI Emoji',
-      2: 'Nunito',
-      3: 'Comic Shanns'
+      1: `${SYSTEM_CHINESE_FONTS}, Virgil, Segoe UI Emoji, sans-serif`,
+      2: 'Nunito, sans-serif',
+      3: 'Comic Shanns, monospace'
     };
 
-    // 同时修改document.fonts的Virgil字体
-    const pingFangFont = new FontFace(
-      'Virgil', // 冒充Virgil字体
-      'url(./fonts/PingFangMengMeng-2.ttf)',
-      { weight: 'normal', style: 'normal' }
-    );
+    // 2. 尝试加载自定义字体文件
+    try {
+      const pingFangFont = new FontFace(
+        'PingFangMengMeng',
+        `url(${fontUrl})`,
+        { 
+          weight: 'normal', 
+          style: 'normal',
+          display: 'swap'
+        }
+      );
+      
+      await pingFangFont.load();
+      document.fonts.add(pingFangFont);
+      
+      // 更新字体映射包含自定义字体
+      (window as any).ExcalidrawFontFamily[1] = `PingFangMengMeng, ${SYSTEM_CHINESE_FONTS}, Virgil, Segoe UI Emoji, sans-serif`;
+      
+      console.log('✅ PingFangMengMeng font loaded successfully');
+      return true;
+      
+    } catch (fontError) {
+      // 字体文件加载失败，继续使用系统字体
+      console.log('⚠️ Custom font not available, using system fonts');
+      return true; // 仍然返回true，因为系统字体可用
+    }
     
-    await pingFangFont.load();
-    
-    // 删除原有的Virgil字体（如果存在）
-    document.fonts.forEach(font => {
-      if (font.family === 'Virgil') {
-        document.fonts.delete(font);
-      }
-    });
-    
-    // 添加我们的字体作为Virgil
-    document.fonts.add(pingFangFont);
-    
-    return true;
   } catch (error) {
+    console.error('❌ Font setup failed:', error);
     return false;
   }
 };
 
-// 覆盖Excalidraw的字体映射
-const overrideExcalidrawFonts = () => {
-  // 等待Excalidraw完全加载
-  const checkAndOverride = () => {
-    try {
-      // 尝试访问Excalidraw内部的字体映射
-      const canvas = document.querySelector('.excalidraw canvas') as HTMLCanvasElement;
-      if (canvas && canvas.getContext) {
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          // 覆盖Canvas的font属性设置
-          const originalFont = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
-          if (originalFont) {
-            Object.defineProperty(ctx, 'font', {
-              set: function(value: string) {
-                // 如果字体设置包含Virgil，替换为中文字体
-                let newValue = value;
-                const chineseFonts = 'PingFang SC, 苹方, Hiragino Sans GB, Microsoft YaHei, 微软雅黑';
-                if (value.includes('Virgil') || value.includes('font-family-1') || value.includes('handwritten')) {
-                  newValue = value.replace(/Virgil|font-family-1|handwritten/g, chineseFonts);
-                }
-                originalFont.set?.call(this, newValue);
-              },
-              get: originalFont.get,
-              configurable: true
-            });
-          }
-        }
-      }
-    } catch (error) {
-      // 静默处理错误
-    }
-  };
-
-  // 立即执行一次
-  checkAndOverride();
+// 强制CSS字体覆盖 - 确保在所有环境中生效
+const injectFontCSS = () => {
+  const style = document.createElement('style');
+  style.id = 'chinese-font-override';
   
-  // 使用MutationObserver监听DOM变化
+  const fullFontChain = `'PingFangMengMeng', '${SYSTEM_CHINESE_FONTS}', 'Virgil', 'Segoe UI Emoji', sans-serif`;
+  
+  style.textContent = `
+    /* 强制覆盖Excalidraw字体 */
+    .excalidraw canvas {
+      font-family: ${fullFontChain} !important;
+    }
+    
+    /* 覆盖CSS变量 */
+    :root {
+      --excalidraw-font-family-1: ${fullFontChain} !important;
+    }
+    
+    /* 额外保障 */
+    .excalidraw .canvas-wrapper canvas,
+    .excalidraw-container canvas {
+      font-family: ${fullFontChain} !important;
+    }
+  `;
+  
+  const existing = document.getElementById('chinese-font-override');
+  if (existing) existing.remove();
+  
+  document.head.appendChild(style);
+};
+
+// 覆盖Excalidraw的字体映射 - 增强版
+const overrideExcalidrawFonts = () => {
+  // 全局Canvas字体拦截
+  const originalFont = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
+  if (originalFont && originalFont.set) {
+    Object.defineProperty(CanvasRenderingContext2D.prototype, 'font', {
+      set: function(value: string) {
+        let newValue = value;
+        if (value.includes('Virgil') || value.includes('Arial') || value.includes('sans-serif')) {
+          // 替换为中文字体
+          newValue = value.replace(/Virgil/g, SYSTEM_CHINESE_FONTS);
+          newValue = newValue.replace(/Arial/g, SYSTEM_CHINESE_FONTS);
+          newValue = newValue.replace(/sans-serif/g, `${SYSTEM_CHINESE_FONTS}, sans-serif`);
+        }
+        originalFont.set?.call(this, newValue);
+      },
+      get: originalFont.get,
+      configurable: true
+    });
+  }
+  
+  // 监听DOM变化，确保持续应用
   const observer = new MutationObserver(() => {
-    checkAndOverride();
+    // 持续应用CSS覆盖
+    injectFontCSS();
   });
   
   observer.observe(document.body, {
@@ -106,15 +135,21 @@ const ExcalidrawWrapper = ({
   const [excalidrawAPI, setExcalidrawAPI] =
     useState<ExcalidrawImperativeAPI | null>(null);
 
-  // 设置自定义字体
+  // 设置字体支持
   useEffect(() => {
-    setupCustomFont().then((success) => {
-      if (success) {
-        // 字体设置成功后，开始覆盖字体渲染
-        const cleanup = overrideExcalidrawFonts();
-        return cleanup;
-      }
-    });
+    const setupFonts = async () => {
+      // 1. 注入CSS
+      injectFontCSS();
+      
+      // 2. 设置字体
+      await setupCustomFont();
+      
+      // 3. 覆盖Canvas渲染
+      const cleanup = overrideExcalidrawFonts();
+      return cleanup;
+    };
+
+    setupFonts();
   }, []);
 
   useEffect(() => {
